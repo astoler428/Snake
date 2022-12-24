@@ -13,14 +13,14 @@ const snakeColor = "green";
 const foodColor = "red";
 const snakeBorder = "black";
 const unitSize = 25;
-let shiftX = 25;
-let shiftY = 0;
+
 let running = true;
 let gameID;
 let food;
 let score = 0;
 let moveFrequency = 140; //milliseconds
 let snake = [];
+let moves = [{ shiftX: unitSize, shiftY: 0 }];
 
 startGame();
 
@@ -41,7 +41,17 @@ function tick() {
 }
 
 function moveSnake() {
-  let head = bodyPart(snake[0].x + shiftX, snake[0].y + shiftY);
+  console.log(snake);
+  if (moves.length > 1) {
+    moves.shift();
+  }
+
+  // console.log(moves[0].shiftY);
+
+  let head = bodyPart(
+    snake[0].x + moves[0].shiftX,
+    snake[0].y + moves[0].shiftY
+  );
   snake.unshift(head);
 
   checkGameOver(head);
@@ -75,6 +85,7 @@ function foodCollision() {
 function createSnake() {
   for (let part = 4; part >= 0; part--)
     snake.push(bodyPart(unitSize * part, 0));
+  console.log(snake);
 }
 
 function drawSnake() {
@@ -107,21 +118,17 @@ function drawFood() {
 
 function changeDirection(event) {
   switch (true) {
-    case event.key === "ArrowLeft" && shiftX === 0:
-      shiftX = -unitSize;
-      shiftY = 0;
+    case event.key === "ArrowLeft" && moves[moves.length - 1].shiftX === 0:
+      moves.push({ shiftX: -1 * unitSize, shiftY: 0 });
       break;
-    case event.key === "ArrowRight" && shiftX === 0:
-      shiftX = unitSize;
-      shiftY = 0;
+    case event.key === "ArrowRight" && moves[moves.length - 1].shiftX === 0:
+      moves.push({ shiftX: unitSize, shiftY: 0 });
       break;
-    case event.key === "ArrowUp" && shiftY === 0:
-      shiftX = 0;
-      shiftY = -unitSize;
+    case event.key === "ArrowUp" && moves[moves.length - 1].shiftY === 0:
+      moves.push({ shiftX: 0, shiftY: -1 * unitSize });
       break;
-    case event.key === "ArrowDown" && shiftY === 0:
-      shiftX = 0;
-      shiftY = unitSize;
+    case event.key === "ArrowDown" && moves[moves.length - 1].shiftY === 0:
+      moves.push({ shiftX: 0, shiftY: unitSize });
       break;
   }
 }
@@ -130,8 +137,7 @@ function restartGame() {
   snake = [];
   score = 0;
   scoreDiv.innerHTML = score;
-  shiftX = unitSize;
-  shiftY = 0;
+  moves = [{ shiftX: unitSize, shiftY: 0 }];
   moveFrequency = 140;
   running = true;
   startGame();
