@@ -46,8 +46,6 @@ function moveSnake() {
     moves.shift();
   }
 
-  // console.log(moves[0].shiftY);
-
   let head = bodyPart(
     snake[0].x + moves[0].shiftX,
     snake[0].y + moves[0].shiftY
@@ -85,7 +83,6 @@ function foodCollision() {
 function createSnake() {
   for (let part = 4; part >= 0; part--)
     snake.push(bodyPart(unitSize * part, 0));
-  console.log(snake);
 }
 
 function drawSnake() {
