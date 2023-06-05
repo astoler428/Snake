@@ -1,0 +1,1 @@
+Game of snake created to practice my html, css and javascript skills.
